@@ -15,7 +15,10 @@ namespace Arnis.Web.Repositiories
         public Account GetByApiKey(string apiKey)
         {
             var query = Builders<Account>.Filter.Eq(e => e.ApiKey, apiKey);
-            var workspaces = Database.GetCollection<Account>("accounts").Find(query).ToListAsync();
+            var workspaces = Database
+                .GetCollection<Account>("accounts")
+                .Find(query)
+                .ToListAsync();
 
             return workspaces.Result
                 .FirstOrDefault();
@@ -23,13 +26,16 @@ namespace Arnis.Web.Repositiories
 
         public Account GetByUserName(string userName)
         {
-            var query = Builders<Account>.Filter.Eq(e => e.UserName, userName);
-            var workspaces = Database.GetCollection<Account>("accounts").Find(query).ToListAsync();
+            var query = Builders<Account>
+                .Filter.Eq(e => e.UserName, userName);
+            var workspaces = Database
+                .GetCollection<Account>("accounts")
+                .Find(query)
+                .ToListAsync();
 
             return workspaces.Result
                 .FirstOrDefault();
         }
-
 
         public Account GetById(ObjectId id)
         {

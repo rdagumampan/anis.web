@@ -55,7 +55,7 @@ namespace Arnis.Web.ApiControllers
                     var workspace = new Workspace
                     {
                         AccountId = account.Id,
-                        //Name = request.Workspace.Name,
+                        Name = request.Workspace.Name,
                         //Description = request.Workspace.Description,
                         //Owners = request.Workspace.Owners,
                         Solutions = request.Workspace.Solutions

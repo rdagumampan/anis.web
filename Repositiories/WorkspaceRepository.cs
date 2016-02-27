@@ -17,26 +17,34 @@ namespace Arnis.Web.Repositiories
         {
             var workspaces = Database
                 .GetCollection<Workspace>("workspaces")
-                .Find(new BsonDocument()).ToListAsync();
+                .Find(new BsonDocument())
+                .ToListAsync();
+
             return workspaces.Result;
         }
 
         public Workspace GetById(ObjectId id)
         {
-            var query = Builders<Workspace>.Filter.Eq(e => e.Id, id);
+            var query = Builders<Workspace>
+                .Filter.Eq(e => e.Id, id);
+
             var workspaces = Database
                 .GetCollection<Workspace>("workspaces")
-                .Find(query).ToListAsync();
+                .Find(query)
+                .ToListAsync();
 
             return workspaces.Result.FirstOrDefault();
         }
 
-        public Workspace GetByAccountId(ObjectId id)
+        public Workspace GetByAccountId(ObjectId accountId)
         {
-            var query = Builders<Workspace>.Filter.Eq(e => e.Id, id);
+            var query = Builders<Workspace>
+                .Filter.Eq(e => e.AccountId, accountId);
+
             var workspaces = Database
                 .GetCollection<Workspace>("workspaces")
-                .Find(query).ToListAsync();
+                .Find(query)
+                .ToListAsync();
 
             return workspaces.Result.FirstOrDefault();
         }
@@ -60,7 +68,7 @@ namespace Arnis.Web.Repositiories
 
         public void Update(Workspace workspace)
         {
-            var query = Builders<Workspace>.Filter.Eq(e => e.Name, workspace.Name);
+            var query = Builders<Workspace>.Filter.Eq(e => e.AccountId, workspace.AccountId);
             var update = Database
                 .GetCollection<Workspace>("workspaces")
                 .ReplaceOneAsync(query, workspace);
