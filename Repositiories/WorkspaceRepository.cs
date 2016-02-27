@@ -1,63 +1,69 @@
-using System;
 using System.Collections.Generic;
-using Arnis.Web.Models;
 using Microsoft.Extensions.OptionsModel;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Linq;
+using Arnis.Web.ApiModels;
 
 namespace Arnis.Web.Repositiories
 {
-    class WorkspaceRepository : IWorkspaceRepository
+    public class WorkspaceRepository : RepositoryBase, IWorkspaceRepository
     {
-        private readonly IOptions<Settings> _settings;
-        private IMongoDatabase _database;
-
-        public WorkspaceRepository(IOptions<Settings> settings)
+        public WorkspaceRepository(IOptions<Settings> settings) : base(settings)
         {
-            _settings = settings;
-            _database = Connect();
         }
 
         public IEnumerable<Workspace> All()
         {
-            var workspaces = _database.GetCollection<Workspace>("Workspaces").Find(new BsonDocument()).ToListAsync();
+            var workspaces = Database
+                .GetCollection<Workspace>("workspaces")
+                .Find(new BsonDocument()).ToListAsync();
             return workspaces.Result;
-        }
-
-        public void Add(Workspace workspace)
-        {
-            _database.GetCollection<Workspace>("Workspaces").InsertOneAsync(workspace);
         }
 
         public Workspace GetById(ObjectId id)
         {
             var query = Builders<Workspace>.Filter.Eq(e => e.Id, id);
-            var workspaces = _database.GetCollection<Workspace>("Workspaces").Find(query).ToListAsync();
+            var workspaces = Database
+                .GetCollection<Workspace>("workspaces")
+                .Find(query).ToListAsync();
 
             return workspaces.Result.FirstOrDefault();
+        }
+
+        public Workspace GetByAccountId(ObjectId id)
+        {
+            var query = Builders<Workspace>.Filter.Eq(e => e.Id, id);
+            var workspaces = Database
+                .GetCollection<Workspace>("workspaces")
+                .Find(query).ToListAsync();
+
+            return workspaces.Result.FirstOrDefault();
+        }
+
+        public void Add(Workspace workspace)
+        {
+            Database
+                .GetCollection<Workspace>("workspaces")
+                .InsertOneAsync(workspace);
         }
 
         public bool Remove(ObjectId id)
         {
             var query = Builders<Workspace>.Filter.Eq(e => e.Id, id);
-            var result = _database.GetCollection<Workspace>("Workspaces").DeleteOneAsync(query);
+            var result = Database
+                .GetCollection<Workspace>("workspaces")
+                .DeleteOneAsync(query);
 
             return GetById(id) == null;
         }
 
         public void Update(Workspace workspace)
         {
-            var query = Builders<Workspace>.Filter.Eq(e => e.Id, workspace.Id);
-            var update = _database.GetCollection<Workspace>("Workspaces").ReplaceOneAsync(query, workspace);
-        }
-
-        private IMongoDatabase Connect()
-        {
-            var client = new MongoClient(_settings.Value.ConnectionString);
-            var database = client.GetDatabase(_settings.Value.Database);
-
-            return database;
+            var query = Builders<Workspace>.Filter.Eq(e => e.Name, workspace.Name);
+            var update = Database
+                .GetCollection<Workspace>("workspaces")
+                .ReplaceOneAsync(query, workspace);
         }
     }
 }

@@ -32,6 +32,7 @@ namespace Arnis.Web
             services.AddMvc();
             services.Configure<Settings>(Configuration);
 
+            services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient<IWorkspaceRepository, WorkspaceRepository>();
         }
 
