@@ -34,38 +34,45 @@ namespace Arnis.Web.ApiControllers
                 if (!accountExists)
                 {
                     //generate a new api key
-                    var apiKey = "ARNIS-" + Guid.NewGuid().ToString().ToUpper();
-                    var account = new Account
+                    var apiKey = "ARNIS-" + Guid.NewGuid().ToString().ToUpper().Substring(0,6);
+                    var accountDbo = new Account
                     {
                         UserName = request.UserName,
                         ApiKey = apiKey
                     };
 
                     //create client account
-                    _accountRepository.Add(account);
-
+                    _accountRepository.Add(accountDbo);
+                        
                     //create default workspace
-                    var workspace = new Workspace
+                    var workspaceDbo = new Workspace
                     {
-                        AccountId = account.Id,
+                        AccountId = accountDbo.Id,
                         Name = "default",
                         Description = "This is your default workspace",
-                        Owners = new List<string> { account.UserName }
+                        Owners = new List<string> { accountDbo.UserName }
                     };
-                    _workspaceRepository.Add(workspace);
+                    _workspaceRepository.Add(workspaceDbo);
 
-                    var response = new
+                    string workspaceLocation = $"{Request.Scheme}://{Request.Host}/workspaces/{request.UserName.ToLower()}";
+                    var responseDto = new
                     {
                         userName = request.UserName,
                         apiKey = apiKey,
-                        workspace = new
-                        {
-                            name = workspace.Name,
-                            description = workspace.Description
-                        }
+                        workspace = workspaceDbo.Name,
+                        location =  workspaceLocation
                     };
 
-                    return new HttpOkObjectResult(response);
+                    return new HttpOkObjectResult(responseDto);
+                }
+                else
+                {
+                    HttpContext.Response.StatusCode = 400;  //400 Bad Request
+                    return new ObjectResult(new
+                    {
+                        errorMessage = "Account with desired username already exists."
+                    });
+
                 }
             }
 

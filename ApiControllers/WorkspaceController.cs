@@ -29,17 +29,17 @@ namespace Arnis.Web.ApiControllers
         [HttpGet("{id:length(24)}", Name = "GetByIdRoute")]
         public IActionResult GetById(string id)
         {
-            var item = _workspaceRepository.GetById(new ObjectId(id));
-            if (item == null)
+            var workspaceDbo = _workspaceRepository.GetById(new ObjectId(id));
+            if (workspaceDbo == null)
             {
                 return HttpNotFound();
             }
 
-            return new ObjectResult(item);
+            return new ObjectResult(workspaceDbo);
         }
 
         [HttpPost]
-        public void Create([FromBody] WorkspaceRequest request)
+        public void Create([FromBody] WorkspaceRequest workspaceDto)
         {
             if (!ModelState.IsValid)
             {
@@ -48,25 +48,20 @@ namespace Arnis.Web.ApiControllers
             else
             {
                 //validate api key
-                var account = _accountRepository.GetByApiKey(request.ApiKey);
+                var account = _accountRepository.GetByApiKey(workspaceDto.ApiKey);
                 if(account!= null)
                 {
                     //update workspace
-                    var workspace = new Workspace
+                    var workspaceDbo = new Workspace
                     {
                         AccountId = account.Id,
-                        Name = request.Workspace.Name,
-                        //Description = request.Workspace.Description,
-                        //Owners = request.Workspace.Owners,
-                        Solutions = request.Workspace.Solutions
+                        Solutions = workspaceDto.Solutions
                     };
-                    _workspaceRepository.Update(workspace);
+                    _workspaceRepository.Update(workspaceDbo);
 
-                    var url = Url.RouteUrl("GetByIdRoute", new { id = workspace.Id.ToString() }, Request.Scheme,
-                        Request.Host.ToUriComponent());
-
-                    HttpContext.Response.StatusCode = 201;  //201 Created
-                    HttpContext.Response.Headers["Location"] = url;
+                    HttpContext.Response.StatusCode = 200;
+                    string workspaceLocation = $"{Request.Scheme}://{Request.Host}/workspaces/{account.UserName.ToLower()}";
+                    HttpContext.Response.Headers.Add("Location", workspaceLocation);
                 }
                 else
                 {

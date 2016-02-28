@@ -6,6 +6,6 @@ namespace Arnis.Web.Models
     public class WorkspaceRequest
     {
         public string ApiKey { get; set; }
-        public Workspace Workspace { get; set; } 
+        public List<Solution> Solutions { get; set; } = new List<Solution>();
     }
 }
