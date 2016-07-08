@@ -1,0 +1,12 @@
+
+@using Newtonsoft.Json
+@model Arnis.Documents.Account
+
+@{
+    ViewData["Title"] = "Account";
+}
+<h2>@ViewData["Title"].</h2>
+<h3>@ViewData["Message"]</h3>
+
+
+@JsonConvert.SerializeObject(Model);

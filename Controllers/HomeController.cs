@@ -7,7 +7,7 @@ namespace Arnis.Web.Controllers
 {
     public class HomeController : Controller
     {
-        [Route("home")]
+        [Route("")]
         public IActionResult Index()
         {
             return View();
@@ -16,7 +16,7 @@ namespace Arnis.Web.Controllers
         [Route("gettingstarted")]
         public IActionResult GettingStarted()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Getting started page.";
 
             return View();
         }
@@ -24,7 +24,7 @@ namespace Arnis.Web.Controllers
         [Route("about")]
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "About page";
 
             return View();
         }
@@ -32,14 +32,8 @@ namespace Arnis.Web.Controllers
         [Route("contact")]
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Contact page.";
 
-            return View();
-        }
-
-        [Route("error")]
-        public IActionResult Error()
-        {
             return View();
         }
     }
