@@ -1,25 +1,29 @@
-using Microsoft.Extensions.OptionsModel;
-using MongoDB.Driver;
+using System;
+using System.Diagnostics;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
 
 namespace Arnis.Web.Repositiories
 {
     public abstract class RepositoryBase
     {
-        private readonly IOptions<Settings> _settings;
-        public IMongoDatabase Database { get; set; }
+        private const string EndpointUri = "https://arnisdb.documents.azure.com:443/";
+        private const string PrimaryKey = "Qz1iWZxei7SN7CKlkUB8rEf4ECHjDtMjdtQcjXEQbDKEr5gDqlocsLXdqQ2EyIj17EEIcwyZ0VIy33uCmyM75g==";
+        private DocumentClient _client;
 
-        public RepositoryBase(IOptions<Settings> settings)
+        protected RepositoryBase()
         {
-            _settings = settings;
-            Database = Connect();
+            InitializeDB().Wait();
         }
 
-        private IMongoDatabase Connect()
-        {
-            var client = new MongoClient(_settings.Value.ConnectionString);
-            var database = client.GetDatabase(_settings.Value.Database);
+        protected string Database => "arnisdb";
+        protected DocumentClient Client => _client;
 
-            return database;
-        }
+        private async Task InitializeDB()
+        {
+            this._client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
+        }        
     }
 }

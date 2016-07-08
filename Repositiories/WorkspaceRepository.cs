@@ -1,77 +1,57 @@
-using System.Collections.Generic;
-using Microsoft.Extensions.OptionsModel;
-using MongoDB.Bson;
-using MongoDB.Driver;
+using System;
+using System.Diagnostics;
 using System.Linq;
-using Arnis.Web.ApiModels;
+using System.Net;
+using System.Threading.Tasks;
+using Arnis.Documents;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
 
 namespace Arnis.Web.Repositiories
 {
     public class WorkspaceRepository : RepositoryBase, IWorkspaceRepository
     {
-        public WorkspaceRepository(IOptions<Settings> settings) : base(settings)
+        private readonly string collectionId = "workspaces";
+
+        public WorkspaceRepository()
         {
         }
-
-        public IEnumerable<Workspace> All()
+        public async Task Create(Workspace workspace)
         {
-            var workspaces = Database
-                .GetCollection<Workspace>("workspaces")
-                .Find(new BsonDocument())
-                .ToListAsync();
-
-            return workspaces.Result;
+            await this.Client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(this.Database, collectionId), workspace);
+            Debug.WriteLine("Created Workspace {0}", workspace.Name);
         }
 
-        public Workspace GetById(ObjectId id)
+        public async Task Update(Workspace workspace)
         {
-            var query = Builders<Workspace>
-                .Filter.Eq(e => e.Id, id);
-
-            var workspaces = Database
-                .GetCollection<Workspace>("workspaces")
-                .Find(query)
-                .ToListAsync();
-
-            return workspaces.Result.FirstOrDefault();
+            await this.Client.ReplaceDocumentAsync(UriFactory.CreateDocumentCollectionUri(this.Database, collectionId), workspace);
+            Debug.WriteLine("Updated Workspace {0}", workspace.Name);
         }
 
-        public Workspace GetByAccountId(ObjectId accountId)
+        public Workspace GetByName(string accountId, string workspaceName)
         {
-            var query = Builders<Workspace>
-                .Filter.Eq(e => e.AccountId, accountId);
+            try
+            {
+                var collectionUri = UriFactory.CreateDocumentCollectionUri(Database, collectionId);
+                var queryOptions = new FeedOptions { MaxItemCount = -1 };
+                var account = this.Client.CreateDocumentQuery<Workspace>(
+                        collectionUri, queryOptions)
+                        .Where(f => 
+                            f.AccountId == accountId && 
+                            f.Name == workspaceName)
+                        .AsEnumerable()
+                        .FirstOrDefault();
 
-            var workspaces = Database
-                .GetCollection<Workspace>("workspaces")
-                .Find(query)
-                .ToListAsync();
-
-            return workspaces.Result.FirstOrDefault();
-        }
-
-        public void Add(Workspace workspace)
-        {
-            Database
-                .GetCollection<Workspace>("workspaces")
-                .InsertOneAsync(workspace);
-        }
-
-        public bool Remove(ObjectId id)
-        {
-            var query = Builders<Workspace>.Filter.Eq(e => e.Id, id);
-            var result = Database
-                .GetCollection<Workspace>("workspaces")
-                .DeleteOneAsync(query);
-
-            return GetById(id) == null;
-        }
-
-        public void Update(Workspace workspace)
-        {
-            var query = Builders<Workspace>.Filter.Eq(e => e.AccountId, workspace.AccountId);
-            var update = Database
-                .GetCollection<Workspace>("workspaces")
-                .ReplaceOneAsync(query, workspace);
+                return account;
+            }
+            catch (AggregateException ex)
+            {
+                var innerException = ex.InnerExceptions.FirstOrDefault();
+                var documentException = innerException as DocumentClientException;
+                if (documentException?.StatusCode == HttpStatusCode.NotFound)
+                    return null;
+            }
+            return null;
         }
     }
 }
