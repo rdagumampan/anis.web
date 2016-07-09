@@ -1,5 +1,8 @@
 using Arnis.Web.Repositiories;
 using Microsoft.AspNet.Mvc;
+using Arnis.Web.Models;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Arnis.Web.Controllers
 {
@@ -33,7 +36,70 @@ namespace Arnis.Web.Controllers
                 var workspace = _workspaceRepository.GetByName(account.Id, workspaceName);
                 if (null != workspace)
                 {
-                    return View(workspace);
+                    var solutionDependencies = workspace.Solutions
+                        .SelectMany(s => s.Dependencies
+                        .Select(sd => new
+                        {
+                            Name = sd.Name,
+                            Version = sd.Version,
+                            Solution = s.Name,
+                            Project = string.Empty,
+                            SolutionFile = s.Location,
+                            ProjectFile = string.Empty,
+                        }));
+
+                    var projectDependencies = workspace.Solutions
+                        .SelectMany(s => s.Projects
+                            .SelectMany(p => p.Dependencies
+                                .Select(pd => new
+                                {
+                                    Name = pd.Name,
+                                    Version = pd.Version,
+                                    Solution = s.Name,
+                                    Project = p.Name,
+                                    SolutionFile = s.Location,
+                                    ProjectFile = p.Location,
+                                })));
+
+                    var dependencies = new List<WorkspaceDependencyVm>();
+                    solutionDependencies
+                       .Union(projectDependencies)
+                       .GroupBy(r => r.Name)
+                       .ToList()
+                       .ForEach(g =>
+                       {
+                           g.ToList()
+                           .OrderBy(r => r.Version)
+                           .GroupBy(grpv => grpv.Version)
+                           .ToList()
+                           .ForEach(gv =>
+                           {
+                               gv.ToList()
+                                   .ForEach(r =>
+                                   {
+                                       dependencies.Add(new WorkspaceDependencyVm
+                                       {
+                                           Name = r.Name,
+                                           Version = r.Version,
+                                           Solution = r.Solution,
+                                           Project = r.Project,
+                                           SolutionFile = r.SolutionFile,
+                                           ProjectFile = r.ProjectFile
+                                       });
+                                   });
+                           });
+                       });
+
+                    var workspaceVm = new WorkspaceVm
+                    {
+                        Name = workspace.Name,
+                        Description = workspace.Description,
+                        Owners = workspace.Owners,
+                        Logs = workspace.Logs.Select(l => new LogVm { Message = l }).ToList(),
+                        Dependencies = dependencies.ToList()
+                    };
+
+                    return View(workspaceVm);
                 }
                 else
                 {

@@ -9,12 +9,16 @@
             <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
             <link rel="stylesheet" href="~/css/site.css" />
         </environment>
+
         <environment names="Staging,Production">
             <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.min.css"
                   asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
                   asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
             <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
         </environment>
+
+        <link rel="stylesheet" href="~/lib/bootstrap-table/dist/bootstrap-table.css" />
+
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top">
@@ -37,22 +41,24 @@
                         <li><a href="https://github.com/rdagumampan/arnis" target="_blank">GitHub</a></li>
                         <li><a href="https://github.com/rdagumampan/arnis/issues" target="_blank">Issues</a></li>
                     </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><iframe class="navbar-text" src="http://ghbtns.com/github-btn.html?user=rdagumampan&repo=arnis&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="75" height="20"></iframe></li>
+                        <li><iframe class="navbar-text" src="http://ghbtns.com/github-btn.html?user=rdagumampan&repo=arnis&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="75" height="20"></iframe></li>
+                        <li><iframe class="navbar-text" src="http://ghbtns.com/github-btn.html?user=rdagumampan&type=follow&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="160" height="20"></iframe></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; 2016 - Arnis - Simple dependency tracker for .NET applications</p>
-            </footer>
         </div>
 
         <environment names="Development">
             <script src="~/lib/jquery/dist/jquery.js"></script>
             <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
             <script src="~/js/site.js" asp-append-version="true"></script>
+
+            <script src="~/lib/bootstrap-table/dist/bootstrap-table.js"></script>
+            <script src="~/lib/bootstrap-table/dist/bootstrap-table-locale-all.js"></script>
         </environment>
+
         <environment names="Staging,Production">
             <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"
                     asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
@@ -63,7 +69,20 @@
                     asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
             </script>
             <script src="~/js/site.min.js" asp-append-version="true"></script>
+
+            <script src="~/lib/bootstrap-table/dist/bootstrap-table.js"></script>
+            <script src="~/lib/bootstrap-table/dist/bootstrap-table-locale-en-us.js"></script>
+
         </environment>
+
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; 2016 - Arnis - Simple dependency tracker for .NET applications</p>
+            </footer>
+        </div>
+
 
         @RenderSection("scripts", required: false)
     </body>
