@@ -1,0 +1,81 @@
+
+@using Newtonsoft.Json
+@model Arnis.Web.Models.WorkspaceVm
+
+@{
+    ViewData["Title"] = "Workspace";
+}
+<h3>You are viewing @Model.Name workspace</h3>
+<h4>Arnis analyzes your project workspace and scans dependencies which are outdated. 
+    Use the search box to identify the specific component.</h4>
+
+<script>
+    $().ready(function () {
+        var $table = $('#table-transform');
+        $table.bootstrapTable();
+
+        var $logs = $('#table-transform-logs');
+        $logs.bootstrapTable();
+    });
+</script>
+
+
+<div id="custom-toolbar">
+    <button class="btn btn-default" id="transform">
+        <i class="glyphicon glyphicon-transfer"></i> <span>Log Messages</span>
+    </button>
+
+</div>
+
+<table id="table-transform" 
+       data-toolbar="#custom-toolbar" 
+       data-shows-toolbar="true" 
+       data-show-toggle="true" 
+       data-show-columns="true" 
+       data-search="true"
+       data-show-export="true">
+    <thead>
+        <tr>
+            <th>Dependency</th>
+            <th>Version</th>
+            <th>Solution</th>
+            <th>Project</th>
+            <th>Location</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model.Dependencies)
+        {
+            <tr>
+                <td>@d.Name</td>
+                <td>@d.Version</td>
+                <td>@d.Solution</td>
+                <td>@d.Project</td>
+                <td>@d.SolutionFile</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<h3>Log Messages</h3>
+<table id="table-transform-logs" 
+       data-toolbar="#transform-buttons" 
+       data-show-toggle="true" 
+       data-search="true"
+       data-show-export="true">
+    <thead>
+        <tr>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var l in Model.Logs)
+        {
+            <tr>
+                <td>@l.Message</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
