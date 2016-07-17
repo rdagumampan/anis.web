@@ -1,9 +1,150 @@
 @{
     ViewData["Title"] = "Workspaces";
 }
-<h2>@ViewData["Title"].</h2>
-<h3>@ViewData["Message"]</h3>
 
+<h3>You are viewing workspace statistics</h3>
+<h4>
+    Arnis analyzes your workspaces and scans dependencies registered.
+    Use the search box to identify the specific component.
+</h4>
 
-<p>Hold on, I'll get back on this.</p>
+<script>
+    $().ready(function () {
+        var $table = $('#table-transform');
+        $table.bootstrapTable();
+    });
+
+</script>
+
+<table id="table-transform"
+       data-toolbar="#custom-toolbar"
+       data-shows-toolbar="true"
+       data-show-columns="true"
+       data-search="true"
+       data-show-export="true">
+    <thead>
+        <tr>
+            <th>Dependency</th>
+            <th>Hits</th>
+            <th>Versions</th>
+            <th>Workspaces</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>.NetFramework</td>
+            <td>125</td>
+            <td>2.0, 3.5, 4.5, 4.5.2</td>
+            <td><a href="/rddag/ons">ons</a>, imagestore, sew, scp, stms, lqdb, rtool, ctool</td>
+            <td>
+                <button class="btn btn-default" id="button-details">
+                    <i class="glyphicon glyphicon-equalizer"></i>
+                </button>
+                <button class="btn btn-default" id="button-save">
+                    <i class="glyphicon glyphicon-save-file"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>Castle.Core</td>
+            <td>30</td>
+            <td>1.5.2</td>
+            <td>ons, imagestore</td>
+            <td>
+                <button class="btn btn-default" id="button-details">
+                    <i class="glyphicon glyphicon-equalizer"></i>
+                </button>
+                <button class="btn btn-default" id="button-save">
+                    <i class="glyphicon glyphicon-save-file"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>EntityFramework</td>
+            <td>10</td>
+            <td>1.5.2</td>
+            <td>ons, imagestore</td>
+            <td>
+                <button class="btn btn-default" id="button-details">
+                    <i class="glyphicon glyphicon-equalizer"></i>
+                </button>
+                <button class="btn btn-default" id="button-save">
+                    <i class="glyphicon glyphicon-save-file"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>EntityFramework.SqlServer</td>
+            <td>6</td>
+            <td>1.5.2</td>
+            <td>ons, imagestore</td>
+            <td>
+                <button class="btn btn-default" id="button-details">
+                    <i class="glyphicon glyphicon-equalizer"></i>
+                </button>
+                <button class="btn btn-default" id="button-save">
+                    <i class="glyphicon glyphicon-save-file"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>Apache.NMS</td>
+            <td>32</td>
+            <td>1.5.2</td>
+            <td>ons, imagestore</td>
+            <td>
+                <button class="btn btn-default" id="button-details">
+                    <i class="glyphicon glyphicon-equalizer"></i>
+                </button>
+                <button class="btn btn-default" id="button-save">
+                    <i class="glyphicon glyphicon-save-file"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>FluentSharp.CoreLib</td>
+            <td>15</td>
+            <td>1.5.2</td>
+            <td>ons, imagestore</td>
+            <td>
+                <button class="btn btn-default" id="button-details">
+                    <i class="glyphicon glyphicon-equalizer"></i>
+                </button>
+                <button class="btn btn-default" id="button-save">
+                    <i class="glyphicon glyphicon-save-file"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>Moq</td>
+            <td>41</td>
+            <td>1.5.2</td>
+            <td>ons, imagestore</td>
+            <td>
+                <button class="btn btn-default" id="button-details">
+                    <i class="glyphicon glyphicon-equalizer"></i>
+                </button>
+                <button class="btn btn-default" id="button-save">
+                    <i class="glyphicon glyphicon-save-file"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>Newtonsoft.Json</td>
+            <td>55</td>
+            <td>1.5.2</td>
+            <td>ons, imagestore</td>
+            <td>
+                <button class="btn btn-default" id="button-details">
+                    <i class="glyphicon glyphicon-equalizer"></i>
+                </button>
+                <button class="btn btn-default" id="button-save">
+                    <i class="glyphicon glyphicon-save-file"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 

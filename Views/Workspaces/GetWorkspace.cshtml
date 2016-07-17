@@ -5,8 +5,9 @@
 @{
     ViewData["Title"] = "Workspace";
 }
+
 <h3>You are viewing @Model.Name workspace</h3>
-<h4>Arnis analyzes your project workspace and scans dependencies which are outdated. 
+<h4>Arnis analyzes your project workspace and scans dependencies health status. 
     Use the search box to identify the specific component.</h4>
 
 <script>
@@ -16,13 +17,27 @@
 
         var $logs = $('#table-transform-logs');
         $logs.bootstrapTable();
+
+
+        var buttonLogs = $('#button-logs');
+        buttonLogs.click(function () {
+            var target = $('#logs');
+            if (target.length) {
+                event.preventDefault();
+                $('html, body').stop().animate({
+                    scrollTop: target.offset().top
+                }, 1000);
+            }
+        });
+
     });
+
 </script>
 
 
 <div id="custom-toolbar">
-    <button class="btn btn-default" id="transform">
-        <i class="glyphicon glyphicon-transfer"></i> <span>Log Messages</span>
+    <button class="btn btn-default" id="button-logs">
+        <i class="glyphicon glyphicon-transfer"></i> <span>Tracker Messages</span>
     </button>
 
 </div>
@@ -30,10 +45,10 @@
 <table id="table-transform" 
        data-toolbar="#custom-toolbar" 
        data-shows-toolbar="true" 
-       data-show-toggle="true" 
        data-show-columns="true" 
        data-search="true"
-       data-show-export="true">
+       data-show-export="true"
+       >
     <thead>
         <tr>
             <th>Dependency</th>
@@ -58,7 +73,8 @@
     </tbody>
 </table>
 
-<h3>Log Messages</h3>
+<a id="logs"></a>
+<h3>Tracker Messages</h3>
 <table id="table-transform-logs" 
        data-toolbar="#transform-buttons" 
        data-show-toggle="true" 

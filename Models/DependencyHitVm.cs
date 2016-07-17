@@ -4,6 +4,13 @@ using System.Linq;
 
 namespace Arnis.Web.Models
 {
+    public class StatisticsVm
+    {
+        public string Name { get; set; }
+        public List<DependencyHitVm> Dependencies { get; set; }
+    }
+
+
     public class DependencyHitVm
     {
         public string Name { get; set; }
@@ -23,12 +30,10 @@ namespace Arnis.Web.Models
         public List<string> Owners { get; set; } = new List<string>();
         public List<LogVm> Logs { get; set; } = new List<LogVm>();
         public List<WorkspaceDependencyVm> Dependencies { get; set; } = new List<WorkspaceDependencyVm>();
+
+        public DateTime LastAnalyzed { get; set; }
     }
 
-    public class LogVm
-    {
-        public string Message { get; set; }
-    }
     public class WorkspaceDependencyVm
     {
         public string Name { get; set; }
@@ -40,6 +45,11 @@ namespace Arnis.Web.Models
 
         public string LatestVersion { get; set; }
         public string Status { get; set; }
+    }
+
+    public class LogVm
+    {
+        public string Message { get; set; }
     }
 
 }

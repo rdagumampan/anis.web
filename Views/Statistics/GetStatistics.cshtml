@@ -1,12 +1,41 @@
 
 @using Newtonsoft.Json
-@model Arnis.Documents.Account
+@model Arnis.Web.Models.StatisticsVm
 
 @{
     ViewData["Title"] = "Statistics";
 }
-<h2>@ViewData["Title"].</h2>
-<h3>@ViewData["Message"]</h3>
 
-@JsonConvert.SerializeObject(Model);
+
+<h3>
+    These are static test data. <br />
+    Hold on, I'll get back on this.
+</h3>
+
+<script>
+    $().ready(function () {
+        var $table = $('#table-transform');
+        $table.bootstrapTable();
+    });
+</script>
+
+<table id="table-transform"
+       data-shows-toolbar="true"
+       data-search="true">
+    <thead>
+        <tr>
+            <th>Dependency</th>
+            <th>Hits</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model.Dependencies)
+        {
+            <tr>
+                <td>@d.Name</td>
+                <td>@d.Hits</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
