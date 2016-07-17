@@ -1,5 +1,5 @@
 using Arnis.Web.Repositiories;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Arnis.Web.Controllers
 {

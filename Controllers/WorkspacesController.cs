@@ -1,5 +1,5 @@
 using Arnis.Web.Repositiories;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Arnis.Web.Models;
 using System.Linq;
 using System.Collections.Generic;
